@@ -108,15 +108,16 @@ variable "disk_iops" {
   description = <<-EOT
 Only valid for AWS and Azure instances.
 
+Can be set regardless of whether compute or disk auto-scaling is enabled. IOPS configuration is independent of autoscaling settings.
+
 ##### AWS
 Target IOPS (Input/Output Operations Per Second) desired for storage attached to this hardware.
 
-Change this parameter if you:
+Requirements:
 
-- set `"replication_specs[n].region_configs[m].provider_name" to "AWS"`.
-- set `"replication_specs[n].region_configs[m].electable_specs.instance_size" to "M30"` or greater (not including `Mxx_NVME` tiers).
-
-- set `"replication_specs[n].region_configs[m].electable_specs.ebs_volume_type" to "PROVISIONED"`.
+- `"replication_specs[n].region_configs[m].provider_name"` must be `"AWS"`.
+- `"replication_specs[n].region_configs[m].electable_specs.instance_size"` must be `"M30"` or greater (not including `Mxx_NVME` tiers).
+- `"replication_specs[n].region_configs[m].electable_specs.ebs_volume_type"` must be `"PROVISIONED"`.
 
 The maximum input/output operations per second (IOPS) depend on the selected `instance_size` and `disk_size_gb`.
 This parameter defaults to the cluster tier's standard IOPS value.
@@ -127,10 +128,10 @@ MongoDB Cloud enforces minimum ratios of storage capacity to system memory for g
 - Instance sizes greater than `M40` have a ratio of 120:1.
 
 ##### Azure
-Target throughput desired for storage attached to your Azure-provisioned cluster. Change this parameter if you:
+Target throughput desired for storage attached to your Azure-provisioned cluster. Requirements:
 
-- set `"replication_specs[n].region_configs[m].provider_name" : "Azure"`.
-- set `"replication_specs[n].region_configs[m].electable_specs.instance_size" : "M40"` or greater not including `Mxx_NVME` tiers.
+- `"replication_specs[n].region_configs[m].provider_name"` must be `"Azure"`.
+- `"replication_specs[n].region_configs[m].electable_specs.instance_size"` must be `"M40"` or greater (not including `Mxx_NVME` tiers).
 
 The maximum input/output operations per second (IOPS) depend on the selected `instance_size` and `disk_size_gb`.
 This parameter defaults to the cluster tier's standard IOPS value.

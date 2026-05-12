@@ -345,16 +345,21 @@ Independent Shard Scaling (ISS) allows different shards to have different instan
 
 ### Disk Configuration Variables
 
-The disk-related variables (`disk_iops`, `disk_size_gb`, `ebs_volume_type`) can only be used when disk auto-scaling is disabled.
+The disk-related variables behave differently with respect to auto-scaling:
 
-**When using auto-scaling (default):**
-- Disk configuration is managed automatically by Atlas
-- You cannot manually specify disk variables
-- Atlas will scale disk capacity and IOPS as needed
+**`disk_iops`** can be set regardless of whether compute or disk auto-scaling is enabled. Atlas allows IOPS to be configured independently of autoscaling settings.
 
-**For manual disk configuration:**
-1. Disable disk auto-scaling, set `auto_scaling = {disk_gb_enabled = false}`
-2. Specify disk variables as needed (`disk_size_gb`, `disk_iops`, etc.)
+**`disk_size_gb`** and **`ebs_volume_type`** can only be used when disk auto-scaling is disabled.
+
+**When using disk auto-scaling (default, `disk_gb_enabled = true`):**
+- Disk capacity is managed automatically by Atlas
+- You cannot manually specify `disk_size_gb` or `ebs_volume_type`
+- Atlas will scale disk capacity as needed
+- You may still set `disk_iops` to control provisioned IOPS
+
+**For full manual disk configuration (`disk_size_gb`, `ebs_volume_type`):**
+1. Disable disk auto-scaling: `auto_scaling = { disk_gb_enabled = false }`
+2. Specify disk variables as needed (`disk_size_gb`, `ebs_volume_type`, `disk_iops`, etc.)
 
 This applies to both the `regions` and `replication_specs` configuration approaches.
 
